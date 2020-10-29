@@ -5,6 +5,8 @@ A fork of FSA Guessing Game
 
 ```
 index.html
+//or 
+https://zwerb.github.io/guessing_game/
 ```
 
 ## Project Setup

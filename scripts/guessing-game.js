@@ -120,7 +120,7 @@ let btn_past_guess = `<div class="list-group-item zb-list-group-item">
 let spiel = new Game();
 
 const playAgainButton = document.querySelector(
-  "div#guess_box button[name='play_again']"
+  "#guess_box button[name='play_again']"
 );
 
 playAgainButton.addEventListener("click", () => {

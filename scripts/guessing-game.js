@@ -133,7 +133,8 @@ hintButton.addEventListener("click", () => {
   document.querySelector("#hint_area").classList.add("zb-card-body-bot");
   document.querySelector(
     "#hint_area"
-  ).innerHTML = `<h5>Hint: it's one of these --> [${spiel.provideHint().join(", ")}]</h5>`;
+  ).innerHTML = `<h5><strong>Hint</strong> - it's one of these: [${spiel.provideHint().join(", ")}]</h5>`;
+  hintButton.style.display = 'none';
 });
 
 const guessSubmitButton = document.querySelector(
@@ -200,15 +201,21 @@ guessSubmitButton.addEventListener("click", () => {
 
     // Show The Status Regardless
     document.querySelector("#guess_history").style.visibility = 'visible';
-    document.querySelector("#status_area").classList.add("zb-card-body-top");
-    document.querySelector("#status_area h2").innerHTML = `${result}`;
+     
+    
+    document.querySelector("#status_area").classList.remove("zb-card-body-top");
+    document.querySelector("#status_area h2").innerHTML = ``;
+
+    // document.querySelector("#status_area").classList.add("zb-card-body-top");
+    // document.querySelector("#status_area h2").innerHTML = `${result}`;
 
     if (result.includes("Win!") || result.includes("Lose.")) {
-      document.querySelector("#guess_text").placeholder = spiel.getPlayingStatus().includes("won") ? "Congratulations!" : "Game Over";
+      document.querySelector("#guess_text").placeholder = spiel.getPlayingStatus().includes("won") ? "Congratulations!" : `Gave Over: [${spiel.winningNumber}]`;
       document.querySelector("#guess_text").disabled = true;
       let icon_type = spiel.getPlayingStatus().includes("won")
         ? "fa-check-circle"
         : "fa-times-circle";
+        let guessedList = document.querySelector("#guess_display_list");
       guessedList.innerHTML =
         btn_past_guess
           .replace("%badge_type%", badge_type)
@@ -231,6 +238,7 @@ guessSubmitButton.addEventListener("click", () => {
 function startGame() {
   spiel = new Game();
 
+  hintButton.style.display = '';
   //document.querySelector("div#previous_guesses ul").innerHTML = "";
   document.querySelector("#status_area h2").innerHTML = "";
   document.querySelector("#status_area").classList.remove("zb-card-body-top");

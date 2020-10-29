@@ -29,8 +29,8 @@ class Game {
     return Math.abs(this.winningNumber - this.playersGuess);
   }
 
-  getPlayingStatus(){
-      return this.playingStatus;
+  getPlayingStatus() {
+    return this.playingStatus;
   }
 
   isLower() {
@@ -38,7 +38,7 @@ class Game {
   }
 
   getLastGuess() {
-    return this.pastGuesses.slice(-1)[0] ;
+    return this.pastGuesses.slice(-1)[0];
   }
 
   checkGuess(num) {
@@ -84,8 +84,8 @@ class Game {
     } else {
       this.playersGuess = tempNum;
       returnStr = this.checkGuess(tempNum);
-      if(!this.pastGuesses.includes(tempNum)){
-          this.pastGuesses.push(tempNum);
+      if (!this.pastGuesses.includes(tempNum)) {
+        this.pastGuesses.push(tempNum);
       }
     }
     return returnStr;
@@ -113,6 +113,10 @@ function newGame() {
 
 /* Delete Below Here to Test the Specs */
 
+let btn_past_guess = `<div class="list-group-item zb-list-group-item">
+      <span class="badge %badge_type% zb-badge">%guess%</span>
+      <span class="zb-list-notification"><i class="zb-fa fa %icon_type%"></i>%suggestion%</span></div>`;
+
 let spiel = new Game();
 
 const playAgainButton = document.querySelector(
@@ -126,21 +130,20 @@ playAgainButton.addEventListener("click", () => {
 const hintButton = document.querySelector("div#guess_box button[name='hint']");
 
 hintButton.addEventListener("click", () => {
+  document.querySelector("#hint_area").classList.add("zb-card-body-bot");
   document.querySelector(
-    "div#hint_area"
-  ).innerHTML = `<h4>Hint: [${spiel.provideHint().join(", ")}]`;
+    "#hint_area"
+  ).innerHTML = `<h5>Hint: it's one of these --> [${spiel.provideHint().join(", ")}]</h5>`;
 });
 
 const guessSubmitButton = document.querySelector(
-  "div#guess_box button[name='submit_guess']"
+  "#guess_box button[name='submit_guess']"
 );
 
 guessSubmitButton.addEventListener("click", () => {
-  let guessText = document.querySelector(
-    "div#guess_box input[name='guess_text']"
-  );
+  let guessText = document.querySelector("#guess_box #guess_text");
   let playerGuess = guessText.value;
-  //   console.log(`You guessed: [${playerGuess}].`);
+  console.log(`You guessed: [${playerGuess}].`);
   guessText.innerHTML = "";
   guessText.value = "";
 
@@ -148,25 +151,79 @@ guessSubmitButton.addEventListener("click", () => {
     let result = spiel.playersGuessSubmission(playerGuess);
 
     if (
-      result.includes("Won!") ||
-      result.includes("Lost.") ||
+
       result.includes("Error") ||
       result.includes("already guessed")
     ) {
       //.. do nothing
+      // result.includes("Win!") ||
+      // result.includes("Lose.") ||
     } else {
-      let guessedList = document.querySelector("div#previous_guesses ul");
-      guessedList.innerHTML += `<li>${spiel.getLastGuess()}</li>`;
+      let guessedList = document.querySelector("#guess_display_list");
+      let badge_type = "";
+      if (spiel.difference() < 10) {
+        badge_type = "badge-success";
+      } else if (spiel.difference() < 25) {
+        badge_type = "badge-warning";
+      } else if (spiel.difference() < 50) {
+        badge_type = "badge-danger";
+      } else {
+        badge_type = "badge-info";
+      }
+      
+      document.querySelector("#guess_history").style.visibility = 'visible';
+      let icon_type = spiel.isLower() ? "fa-arrow-up" : "fa-arrow-down";
+      icon_type = spiel.getPlayingStatus().includes("won")
+        ? "fa-check-circle"
+        : spiel.getPlayingStatus().includes("lost") ? "fa-times-circle" : icon_type;
+      let extra_hint = spiel.isLower() ? "(Try higher)" : "(Try lower)";
+      extra_hint = spiel.getPlayingStatus().includes("won")
+      ? "Boom!"
+      : spiel.getPlayingStatus().includes("lost") ? "Sorry!" : extra_hint; 
+      guessedList.innerHTML =
+        btn_past_guess
+          .replace("%badge_type%", badge_type)
+          .replace("%guess%", playerGuess)
+          .replace("%icon_type%", icon_type)
+          .replace("%suggestion%", result + " " + extra_hint) + guessedList.innerHTML;
+      // make it flash once
+      let newNotificationDiv = document.querySelector("#guess_display_list div");
+      newNotificationDiv.classList.add("zb-list-group-item-shine");
+      setTimeout(function() {
+        newNotificationDiv.classList.remove("zb-list-group-item-shine");
+     }, 250);
+          
       document.querySelector(
-        "div#remaining_guesses span"
+        "#remaining_guesses span#remaining_guess_number"
       ).innerHTML = spiel.getRemainingGuesses();
     }
 
-    document.querySelector("div#status_area h2").innerHTML = `${result}`;
+    // Show The Status Regardless
+    document.querySelector("#guess_history").style.visibility = 'visible';
+    document.querySelector("#status_area").classList.add("zb-card-body-top");
+    document.querySelector("#status_area h2").innerHTML = `${result}`;
+
+    if (result.includes("Win!") || result.includes("Lose.")) {
+      document.querySelector("#guess_text").placeholder = spiel.getPlayingStatus().includes("won") ? "Congratulations!" : "Game Over";
+      document.querySelector("#guess_text").disabled = true;
+      let icon_type = spiel.getPlayingStatus().includes("won")
+        ? "fa-check-circle"
+        : "fa-times-circle";
+      guessedList.innerHTML =
+        btn_past_guess
+          .replace("%badge_type%", badge_type)
+          .replace("%guess%", playerGuess)
+          .replace("%icon_type%", icon_type)
+          .replace("%suggestion%", result) + guessedList.innerHTML;
+      document.querySelector(
+        "#remaining_guesses span#remaining_guess_number"
+      ).innerHTML = spiel.getRemainingGuesses();
+    }
   } catch (error) {
     console.error(error);
     if (spiel.getPlayingStatus() == "playing") {
-      document.querySelector("div#status_area h2").innerHTML = `Invalid input.`;
+      document.querySelector("#status_area").classList.add("zb-card-body-top");
+      document.querySelector("#status_area h2").innerHTML = `Invalid input.`;
     }
   }
 });
@@ -174,12 +231,20 @@ guessSubmitButton.addEventListener("click", () => {
 function startGame() {
   spiel = new Game();
 
-  document.querySelector("div#previous_guesses ul").innerHTML = "";
-  document.querySelector("div#status_area h2").innerHTML = "";
+  //document.querySelector("div#previous_guesses ul").innerHTML = "";
+  document.querySelector("#status_area h2").innerHTML = "";
+  document.querySelector("#status_area").classList.remove("zb-card-body-top");
   document.querySelector(
-    "div#remaining_guesses span"
+    "#remaining_guesses span#remaining_guess_number"
   ).innerHTML = spiel.getRemainingGuesses();
-  document.querySelector("div#hint_area").innerHTML = "";
+  // document.querySelector("#status_area").style.visibility = 'hidden';
+  document.querySelector("#hint_area").innerHTML = "";
+  document.querySelector("#hint_area").classList.remove("zb-card-body-bot");
+  document.querySelector("#guess_display_list").innerHTML = "";
+  document.querySelector("#guess_text").disabled = false;
+  // document.querySelector("#guess_history").style.visibility = 'hidden';
+  document.querySelector("#guess_text").placeholder = "Enter number [1-100]...";
+  //document.querySelector("#previous_guesses").style.visibility = "hidden";
 
   //   console.log(`Started new spiel with winningNumber: [${spiel.winningNumber}].`);
 }

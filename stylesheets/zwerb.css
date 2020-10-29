@@ -1,19 +1,79 @@
-.zb-center-div{
-    margin: auto;
+.zb-center-div {
+  margin: auto;
 }
 
-.zwerb-center-nav-top{
-    padding: 15px 0;
-    position: relative;
-    margin: auto;
-  }
-
-.zb-center-text{
-    text-align: center;
+.zwerb-center-nav-top {
+  padding: 15px 0;
+  position: relative;
+  margin: auto;
 }
 
-#guess_text{
-    font-size: xx-large;
-    color: #eaeaea;
-    text-align: center;
+.zb-center-text {
+  text-align: center;
+}
+
+#guess_text {
+  font-size: xx-large;
+  color: #eaeaea;
+  text-align: center;
+}
+
+#hint_area {
+  margin: 10px;
+}
+
+#previous_guesses {
+  margin: 1.5em 0;
+}
+
+#remaining_guesses {
+  float: right;
+  font-size: large;
+}
+
+.zb-card-body-top {
+  color: #999;
+  padding: 20px 20px 0 20px;
+  font-weight: 400;
+}
+
+.zb-card-body-bot {
+  color: #999;
+  padding: 10px 20px 0 20px;
+  font-weight: 400;
+}
+
+.zb-badge {
+  font-size: x-large;
+  padding: 10px;
+}
+
+.zb-list-notification {
+  font-size: large;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.za-fa {
+  font-size: xx-large;
+}
+
+.zb-list-group-item {
+  padding: 10px;
+  background-color: transparent;
+}
+
+.zb-list-group-item-shine {
+  background-color: rgba(66, 66, 240, 0.25);
+}
+
+.zb-card{
+    /*background: #20252e;*/
+}
+
+body{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }

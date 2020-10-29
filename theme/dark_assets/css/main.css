@@ -6687,7 +6687,7 @@ ul.choose-skin li span,
   border-right: 0;
   padding: 20px 20px;
   border-color: #373b41;
-  background-color: transparent;
+  /*background-color: transparent;*/
 }
 .list-widget .list-group-item:first-child {
   border-top: 0;

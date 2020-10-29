@@ -1,0 +1,19 @@
+.zb-center-div{
+    margin: auto;
+}
+
+.zwerb-center-nav-top{
+    padding: 15px 0;
+    position: relative;
+    margin: auto;
+  }
+
+.zb-center-text{
+    text-align: center;
+}
+
+#guess_text{
+    font-size: xx-large;
+    color: #eaeaea;
+    text-align: center;
+}

@@ -1,21 +1,11 @@
-function getElementByXpath(path) {
-  return document.evaluate(
-    path,
-    document,
-    null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE,
-    null
-  ).singleNodeValue;
-}
-
-let game = new Game();
+let spiel = new Game();
 
 const playAgainButton = document.querySelector(
   "div#guess_box button[name='play_again']"
 );
 
 playAgainButton.addEventListener("click", () => {
-  newGame();
+  startGame();
 });
 
 const hintButton = document.querySelector("div#guess_box button[name='hint']");
@@ -23,7 +13,7 @@ const hintButton = document.querySelector("div#guess_box button[name='hint']");
 hintButton.addEventListener("click", () => {
   document.querySelector(
     "div#hint_area"
-  ).innerHTML = `<h4>Hint: [${game.provideHint().join(", ")}]`;
+  ).innerHTML = `<h4>Hint: [${spiel.provideHint().join(", ")}]`;
 });
 
 const guessSubmitButton = document.querySelector(
@@ -35,12 +25,12 @@ guessSubmitButton.addEventListener("click", () => {
     "div#guess_box input[name='guess_text']"
   );
   let playerGuess = guessText.value;
-//   console.log(`You guessed: [${playerGuess}].`);
+  //   console.log(`You guessed: [${playerGuess}].`);
   guessText.innerHTML = "";
   guessText.value = "";
 
   try {
-    let result = game.playersGuessSubmission(playerGuess);
+    let result = spiel.playersGuessSubmission(playerGuess);
 
     if (
       result.includes("Won!") ||
@@ -51,32 +41,32 @@ guessSubmitButton.addEventListener("click", () => {
       //.. do nothing
     } else {
       let guessedList = document.querySelector("div#previous_guesses ul");
-      guessedList.innerHTML += `<li>${game.getLastGuess()}</li>`;
+      guessedList.innerHTML += `<li>${spiel.getLastGuess()}</li>`;
       document.querySelector(
         "div#remaining_guesses span"
-      ).innerHTML = game.getRemainingGuesses();
+      ).innerHTML = spiel.getRemainingGuesses();
     }
 
     document.querySelector("div#status_area h2").innerHTML = `${result}`;
   } catch (error) {
     console.error(error);
-    if (game.getPlayingStatus() == "playing") {
+    if (spiel.getPlayingStatus() == "playing") {
       document.querySelector("div#status_area h2").innerHTML = `Invalid input.`;
     }
   }
 });
 
-function newGame() {
-  game = new Game();
+function startGame() {
+  spiel = new Game();
 
   document.querySelector("div#previous_guesses ul").innerHTML = "";
   document.querySelector("div#status_area h2").innerHTML = "";
   document.querySelector(
     "div#remaining_guesses span"
-  ).innerHTML = game.getRemainingGuesses();
+  ).innerHTML = spiel.getRemainingGuesses();
   document.querySelector("div#hint_area").innerHTML = "";
 
-//   console.log(`Started new game with winningNumber: [${game.winningNumber}].`);
+  //   console.log(`Started new spiel with winningNumber: [${spiel.winningNumber}].`);
 }
 
-newGame();
+startGame();
